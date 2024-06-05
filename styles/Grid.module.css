@@ -2,24 +2,26 @@
   overflow-x: auto;
 }
 
-.table {
-  width: 100%;
+.borderedTable {
   border-collapse: collapse;
 }
 
-.table th,
-.table td {
+.borderedTable th,
+.borderedTable td {
   border: 1px solid #ddd;
   padding: 8px;
+  text-align: center;
 }
 
-.table th {
+.borderedTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
   background-color: #f2f2f2;
-  text-align: center;
+  color: black;
 }
 
-.table td {
-  text-align: center;
+.table-hoverable tr:hover {
+  background-color: #f5f5f5;
 }
 
 

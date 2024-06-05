@@ -31,9 +31,32 @@ const Grid = ({ data }) => {
       .map(response => response.time);
   };
 
+  const getAllTimes = () => {
+    return data
+      .flatMap(result => result.responses)
+      .filter(response => !response.error)
+      .map(response => response.time);
+  };
+
+  const averageOfAverages = calculateAverage(
+    data
+      .map(result => result.responses)
+      .flat()
+      .filter(response => !response.error)
+      .map(response => response.time)
+  );
+
+  const medianOfMedians = calculateMedian(
+    data
+      .map(result => result.responses)
+      .flat()
+      .filter(response => !response.error)
+      .map(response => response.time)
+  );
+
   return (
     <div className={styles.tableContainer}>
-      <table className="table is-fullwidth">
+      <table className={`table is-fullwidth is-striped is-hoverable ${styles.borderedTable}`}>
         <thead>
           <tr>
             <th>Method</th>
@@ -67,8 +90,7 @@ const Grid = ({ data }) => {
             <>
               <tr>
                 <td>RPC URL Average</td>
-                <td></td>
-                <td></td>
+                <td colSpan="2" className={getColorClass(averageOfAverages)}>{averageOfAverages} ms</td>
                 {data.map((result, index) => {
                   const times = result.responses.filter(response => !response.error).map(response => response.time);
                   const average = calculateAverage(times);
@@ -77,8 +99,7 @@ const Grid = ({ data }) => {
               </tr>
               <tr>
                 <td>RPC URL Median</td>
-                <td></td>
-                <td></td>
+                <td colSpan="2" className={getColorClass(medianOfMedians)}>{medianOfMedians} ms</td>
                 {data.map((result, index) => {
                   const times = result.responses.filter(response => !response.error).map(response => response.time);
                   const median = calculateMedian(times);
