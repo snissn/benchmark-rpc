@@ -16,7 +16,9 @@ const Grid = ({ data }) => {
           <tr key={index}>
             <td>{result.rpcUrl}</td>
             {result.responses.map((res, i) => (
-              <td key={i}>{res.time.toFixed(2)} ms</td>
+              <td key={i}>
+                {res.error ? `❌ ${res.errorMessage}` : `${res.time.toFixed(2)} ms`}
+              </td>
             ))}
           </tr>
         ))}
@@ -26,4 +28,5 @@ const Grid = ({ data }) => {
 };
 
 export default Grid;
+
 

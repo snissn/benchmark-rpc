@@ -30,14 +30,31 @@ const benchmarkRpc = async (rpcUrl, method) => {
   };
 
   const startTime = performance.now();
-  await fetch(rpcUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(requestData)
-  });
-  const endTime = performance.now();
+  try {
+    const response = await fetch(rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData)
+    });
 
-  return endTime - startTime;
+    const endTime = performance.now();
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      const errorMessage = result.error ? result.error.message : `HTTP error! status: ${response.status}`;
+      throw new Error(errorMessage);
+    }
+
+    if (result.error) {
+      throw new Error(result.error.message);
+    }
+
+    return { time: endTime - startTime, error: false, errorMessage: '' };
+  } catch (error) {
+    const endTime = performance.now();
+    return { time: endTime - startTime, error: true, errorMessage: `${error.message} (${(endTime - startTime).toFixed(2)} ms)` };
+  }
 };
 
 const Home = () => {
@@ -50,8 +67,8 @@ const Home = () => {
       for (const rpcUrl of rpcUrls.rpcUrls) {
         const responses = [];
         for (const method of rpcMethods) {
-          const time = await benchmarkRpc(rpcUrl, method);
-          responses.push({ method, time });
+          const result = await benchmarkRpc(rpcUrl, method);
+          responses.push({ method, ...result });
         }
         results.push({ rpcUrl, responses });
       }
@@ -70,4 +87,5 @@ const Home = () => {
 };
 
 export default Home;
+
 
