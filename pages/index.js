@@ -7,10 +7,7 @@ const filecoinRpcUrls = [
   "https://api.node.glif.io",
   "https://api.chain.love/rpc/v1",
   "https://filfox.info/rpc/v1",
-  "https://filecoin.drpc.org",
-  "https://filecoin-mainnet.chainstacklabs.com/rpc/v1",
-  "https://infura.sftproject.io/filecoin/rpc/v1",
-  "https://node.filutils.com/rpc/v1"
+  "https://filecoin.drpc.org"
 ];
 
 const ethereumRpcUrls = [
