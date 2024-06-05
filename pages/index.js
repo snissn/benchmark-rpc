@@ -1,7 +1,26 @@
-import { useState, useEffect } from 'react';
-import Grid from '../components/Grid';
+import BenchmarkSection from '../components/BenchmarkSection';
 import styles from '../styles/Home.module.css';
-import rpcUrls from '../config/rpc-urls.json';
+
+const filecoinRpcUrls = [
+  "https://rpc.ankr.com/filecoin",
+  "https://filecoin.chainup.net/rpc/v1",
+  "https://api.node.glif.io",
+  "https://api.chain.love/rpc/v1",
+  "https://filfox.info/rpc/v1",
+  "https://filecoin.drpc.org",
+  "https://filecoin-mainnet.chainstacklabs.com/rpc/v1",
+  "https://infura.sftproject.io/filecoin/rpc/v1",
+  "https://node.filutils.com/rpc/v1"
+];
+
+const ethereumRpcUrls = [
+  "https://eth.llamarpc.com",
+  "https://public.stackup.sh/api/v1/node/ethereum-mainnet",
+  "https://ethereum.blockpi.network/v1/rpc/public",
+  "https://eth-pokt.nodies.app",
+  "https://eth-mainnet.public.blastapi.io",
+  "https://mainnet.gateway.tenderly.co"
+];
 
 const rpcMethods = [
   'eth_blockNumber',
@@ -80,56 +99,62 @@ const benchmarkRpc = async (rpcUrl, method, params) => {
   }
 };
 
-const Home = () => {
-  const [data, setData] = useState([]);
+const fetchBenchmarkData = async (rpcUrls, rpcMethods) => {
+  const results = [];
 
-  useEffect(() => {
-    const fetchBenchmarkData = async () => {
-      const results = [];
+  for (const rpcUrl of rpcUrls) {
+    try {
+      const { latestBlockNumber, latestBlockHash, latestTransactionHash } = await fetchLatestBlockInfo(rpcUrl);
+      const params = methodParams(latestBlockNumber, latestBlockHash, latestTransactionHash);
 
-      for (const rpcUrl of rpcUrls.rpcUrls) {
-        try {
-          const { latestBlockNumber, latestBlockHash, latestTransactionHash } = await fetchLatestBlockInfo(rpcUrl);
-          const params = methodParams(latestBlockNumber, latestBlockHash, latestTransactionHash);
-
-          const responses = [];
-          for (const method of rpcMethods) {
-            const param = params[method];
-            if (param.includes(null)) {
-              responses.push({
-                method,
-                time: 0,
-                error: true,
-                errorMessage: 'No transaction hash available'
-              });
-            } else {
-              const result = await benchmarkRpc(rpcUrl, method, param);
-              responses.push({ method, ...result });
-            }
-          }
-          results.push({ rpcUrl, responses });
-        } catch (error) {
-          results.push({
-            rpcUrl,
-            responses: rpcMethods.map(method => ({
-              method,
-              time: 0,
-              error: true,
-              errorMessage: error.message
-            }))
+      const responses = [];
+      for (const method of rpcMethods) {
+        const param = params[method];
+        if (param.includes(null)) {
+          responses.push({
+            method,
+            time: 0,
+            error: true,
+            errorMessage: 'No transaction hash available'
           });
+        } else {
+          const result = await benchmarkRpc(rpcUrl, method, param);
+          responses.push({ method, ...result });
         }
       }
+      results.push({ rpcUrl, responses });
+    } catch (error) {
+      results.push({
+        rpcUrl,
+        responses: rpcMethods.map(method => ({
+          method,
+          time: 0,
+          error: true,
+          errorMessage: error.message
+        }))
+      });
+    }
+  }
 
-      setData(results);
-    };
-    fetchBenchmarkData();
-  }, []);
+  return results;
+};
 
+const Home = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>RPC Benchmark</h1>
-      <Grid data={data} />
+      <BenchmarkSection
+        title="Filecoin ETH RPC Benchmark"
+        rpcUrls={filecoinRpcUrls}
+        rpcMethods={rpcMethods}
+        fetchBenchmarkData={fetchBenchmarkData}
+      />
+      <BenchmarkSection
+        title="Ethereum RPC Benchmark"
+        rpcUrls={ethereumRpcUrls}
+        rpcMethods={rpcMethods}
+        fetchBenchmarkData={fetchBenchmarkData}
+      />
     </div>
   );
 };
