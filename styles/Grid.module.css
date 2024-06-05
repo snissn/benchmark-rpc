@@ -1,3 +1,7 @@
+.tableContainer {
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -17,4 +21,5 @@
 .table td {
   text-align: center;
 }
+
 

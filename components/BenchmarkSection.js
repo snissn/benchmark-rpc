@@ -17,7 +17,7 @@ const BenchmarkSection = ({ title, rpcUrls, rpcMethods, fetchBenchmarkData }) =>
 
   return (
     <div className={styles.section}>
-      <h2 className={styles.title}>{title}</h2>
+      <h2 className="title is-3">{title}</h2>
       {loading ? (
         <div className={styles.loading}>
           <p>Loading benchmark data...</p>

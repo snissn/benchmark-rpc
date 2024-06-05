@@ -139,7 +139,7 @@ const fetchBenchmarkData = async (rpcUrls, rpcMethods) => {
 const Home = () => {
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>RPC Benchmark</h1>
+      <h1 className="title is-1">RPC Benchmark</h1>
       <BenchmarkSection
         title="Filecoin ETH RPC Benchmark"
         rpcUrls={filecoinRpcUrls}
