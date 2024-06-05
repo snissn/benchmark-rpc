@@ -89,7 +89,7 @@ const Grid = ({ data }) => {
           {data.length > 0 && (
             <>
               <tr>
-                <td>RPC URL Average</td>
+                <td>Summary Average</td>
                 <td colSpan="2" className={getColorClass(averageOfAverages)}>{averageOfAverages} ms</td>
                 {data.map((result, index) => {
                   const times = result.responses.filter(response => !response.error).map(response => response.time);
@@ -98,7 +98,7 @@ const Grid = ({ data }) => {
                 })}
               </tr>
               <tr>
-                <td>RPC URL Median</td>
+                <td>Summary Median</td>
                 <td colSpan="2" className={getColorClass(medianOfMedians)}>{medianOfMedians} ms</td>
                 {data.map((result, index) => {
                   const times = result.responses.filter(response => !response.error).map(response => response.time);
