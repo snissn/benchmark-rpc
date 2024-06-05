@@ -11,14 +11,15 @@ const Grid = ({ data }) => {
     }
   };
 
-  const calculateAverage = (methodIndex) => {
-    const times = data.map(result => result.responses[methodIndex].time).filter(time => !isNaN(time));
+  const calculateAverage = (times) => {
+    if (times.length === 0) return 'N/A';
     const total = times.reduce((acc, time) => acc + time, 0);
     return (total / times.length).toFixed(2);
   };
 
-  const calculateMedian = (methodIndex) => {
-    const times = data.map(result => result.responses[methodIndex].time).filter(time => !isNaN(time)).sort((a, b) => a - b);
+  const calculateMedian = (times) => {
+    if (times.length === 0) return 'N/A';
+    times.sort((a, b) => a - b);
     const mid = Math.floor(times.length / 2);
     return times.length % 2 !== 0 ? times[mid].toFixed(2) : ((times[mid - 1] + times[mid]) / 2).toFixed(2);
   };
@@ -45,18 +46,24 @@ const Grid = ({ data }) => {
               ))}
             </tr>
           ))}
-          <tr>
-            <td>Average</td>
-            {data.length > 0 && data[0].responses.map((_, index) => (
-              <td key={index}>{calculateAverage(index)} ms</td>
-            ))}
-          </tr>
-          <tr>
-            <td>Median</td>
-            {data.length > 0 && data[0].responses.map((_, index) => (
-              <td key={index}>{calculateMedian(index)} ms</td>
-            ))}
-          </tr>
+          {data.length > 0 && (
+            <>
+              <tr>
+                <td>Average</td>
+                {data.map((result, index) => {
+                  const times = result.responses.filter(response => !response.error).map(response => response.time);
+                  return <td key={index}>{calculateAverage(times)} ms</td>;
+                })}
+              </tr>
+              <tr>
+                <td>Median</td>
+                {data.map((result, index) => {
+                  const times = result.responses.filter(response => !response.error).map(response => response.time);
+                  return <td key={index}>{calculateMedian(times)} ms</td>;
+                })}
+              </tr>
+            </>
+          )}
         </tbody>
       </table>
     </div>
