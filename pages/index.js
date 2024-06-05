@@ -10,22 +10,45 @@ const rpcMethods = [
   'eth_getBlockTransactionCountByNumber',
   'eth_getBlockTransactionCountByHash',
   'eth_getTransactionByHash',
-  'eth_getTransactionByBlockNumberAndIndex',
-  'eth_getTransactionByBlockHashAndIndex',
   'eth_getTransactionReceipt',
   'eth_call',
-  'eth_sendTransaction',
-  'eth_sendRawTransaction',
   'eth_getLogs',
   'eth_getBalance',
   'eth_gasPrice'
 ];
 
-const benchmarkRpc = async (rpcUrl, method) => {
+const methodParams = (latestBlockNumber, latestBlockHash, latestTransactionHash) => ({
+  'eth_blockNumber': [],
+  'eth_getBlockByNumber': [latestBlockNumber, true],
+  'eth_getBlockByHash': [latestBlockHash, true],
+  'eth_getBlockTransactionCountByNumber': [latestBlockNumber],
+  'eth_getBlockTransactionCountByHash': [latestBlockHash],
+  'eth_getTransactionByHash': [latestTransactionHash],
+  'eth_getTransactionReceipt': [latestTransactionHash],
+  'eth_call': [{ to: "0x0000000000000000000000000000000000000000" }, "latest"],
+  'eth_getLogs': [{ fromBlock: "latest", address: "0x0000000000000000000000000000000000000000" }],
+  'eth_getBalance': ["0x0000000000000000000000000000000000000000", "latest"],
+  'eth_gasPrice': []
+});
+
+const fetchLatestBlockInfo = async (rpcUrl) => {
+  const blockNumberResult = await benchmarkRpc(rpcUrl, 'eth_blockNumber', []);
+  if (blockNumberResult.error) throw new Error(blockNumberResult.errorMessage);
+  const latestBlockNumber = blockNumberResult.result;
+
+  const blockResult = await benchmarkRpc(rpcUrl, 'eth_getBlockByNumber', [latestBlockNumber, true]);
+  if (blockResult.error) throw new Error(blockResult.errorMessage);
+  const latestBlockHash = blockResult.result.hash;
+  const latestTransactionHash = blockResult.result.transactions.length > 0 ? blockResult.result.transactions[0].hash : null;
+
+  return { latestBlockNumber, latestBlockHash, latestTransactionHash };
+};
+
+const benchmarkRpc = async (rpcUrl, method, params) => {
   const requestData = {
     jsonrpc: '2.0',
     method,
-    params: [],
+    params,
     id: 1
   };
 
@@ -50,7 +73,7 @@ const benchmarkRpc = async (rpcUrl, method) => {
       throw new Error(result.error.message);
     }
 
-    return { time: endTime - startTime, error: false, errorMessage: '' };
+    return { time: endTime - startTime, result: result.result, error: false, errorMessage: '' };
   } catch (error) {
     const endTime = performance.now();
     return { time: endTime - startTime, error: true, errorMessage: `${error.message} (${(endTime - startTime).toFixed(2)} ms)` };
@@ -65,12 +88,37 @@ const Home = () => {
       const results = [];
 
       for (const rpcUrl of rpcUrls.rpcUrls) {
-        const responses = [];
-        for (const method of rpcMethods) {
-          const result = await benchmarkRpc(rpcUrl, method);
-          responses.push({ method, ...result });
+        try {
+          const { latestBlockNumber, latestBlockHash, latestTransactionHash } = await fetchLatestBlockInfo(rpcUrl);
+          const params = methodParams(latestBlockNumber, latestBlockHash, latestTransactionHash);
+
+          const responses = [];
+          for (const method of rpcMethods) {
+            const param = params[method];
+            if (param.includes(null)) {
+              responses.push({
+                method,
+                time: 0,
+                error: true,
+                errorMessage: 'No transaction hash available'
+              });
+            } else {
+              const result = await benchmarkRpc(rpcUrl, method, param);
+              responses.push({ method, ...result });
+            }
+          }
+          results.push({ rpcUrl, responses });
+        } catch (error) {
+          results.push({
+            rpcUrl,
+            responses: rpcMethods.map(method => ({
+              method,
+              time: 0,
+              error: true,
+              errorMessage: error.message
+            }))
+          });
         }
-        results.push({ rpcUrl, responses });
       }
 
       setData(results);
