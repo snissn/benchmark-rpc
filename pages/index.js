@@ -18,7 +18,6 @@ const ethereumRpcUrls = [
   "https://ethereum.blockpi.network/v1/rpc/public",
   "https://eth-pokt.nodies.app",
   "https://eth-mainnet.public.blastapi.io",
-  "https://mainnet.gateway.tenderly.co"
 ];
 
 const rpcMethods = [
