@@ -33,6 +33,29 @@ const Grid = ({ data }) => {
       .map(response => response.time);
   };
 
+  const getAllTimes = () => {
+    return data
+      .flatMap(result => result.responses)
+      .filter(response => !response.error)
+      .map(response => response.time);
+  };
+
+  const averageOfAverages = calculateAverage(
+    data
+      .map(result => result.responses)
+      .flat()
+      .filter(response => !response.error)
+      .map(response => response.time)
+  );
+
+  const medianOfMedians = calculateMedian(
+    data
+      .map(result => result.responses)
+      .flat()
+      .filter(response => !response.error)
+      .map(response => response.time)
+  );
+
   return (
     <div className={styles.tableContainer}>
       <div className={styles.legend}>
