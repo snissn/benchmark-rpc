@@ -4,10 +4,10 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const filecoinRpcUrls = [
+  "https://fil-mainnet-1.rpc.laconic.com/rpc/v1",
   "https://rpc.ankr.com/filecoin",
   "https://filecoin.chainup.net/rpc/v1",
   "https://api.node.glif.io",
-  "https://api.chain.love/rpc/v1",
   "https://filfox.info/rpc/v1",
   "https://filecoin.drpc.org"
 ];
