@@ -17,3 +17,8 @@
   padding-top: 12px;
   padding-bottom: 12px;
 }
+
+.rpcUrl{
+  max-width: 100px;
+  word-wrap: break-word;
+}
