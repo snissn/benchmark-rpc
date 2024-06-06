@@ -56,6 +56,11 @@ const Grid = ({ data }) => {
       .map(response => response.time)
   );
 
+  const getWorstColorClass = (times) => {
+    const worstTime = Math.max(...times);
+    return getColorClass(worstTime);
+  };
+
   return (
     <div className={styles.tableContainer}>
       <div className={styles.legend}>
@@ -82,7 +87,7 @@ const Grid = ({ data }) => {
 
             return (
               <tr key={index}>
-                <td>{response.method}</td>
+		<td className={getWorstColorClass(methodTimes)}>{response.method}</td>
                 {data.map((result, i) => (
                   <td key={i} className={getColorClass(result.responses[index].time)}>
                     {result.responses[index].error ? `❌ ${result.responses[index].errorMessage}` : `${result.responses[index].time.toFixed(2)} ms`}
