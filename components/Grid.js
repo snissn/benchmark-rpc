@@ -67,11 +67,11 @@ const Grid = ({ data }) => {
         <thead>
           <tr>
             <th>Method</th>
-            <th>Average</th>
-            <th>Median</th>
             {data.map((result, index) => (
               <th key={index}>{result.rpcUrl}</th>
             ))}
+            <th>Average</th>
+            <th>Median</th>
           </tr>
         </thead>
         <tbody>
@@ -83,13 +83,13 @@ const Grid = ({ data }) => {
             return (
               <tr key={index}>
                 <td>{response.method}</td>
-                <td className={getColorClass(methodAverage)}>{`${methodAverage}`} ms</td>
-                <td className={getColorClass(methodMedian)}>{`${methodMedian}`} ms</td>
                 {data.map((result, i) => (
                   <td key={i} className={getColorClass(result.responses[index].time)}>
                     {result.responses[index].error ? `❌ ${result.responses[index].errorMessage}` : `${result.responses[index].time.toFixed(2)} ms`}
                   </td>
                 ))}
+                <td className={getColorClass(methodAverage)}>{`${methodAverage}`} ms</td>
+                <td className={getColorClass(methodMedian)}>{`${methodMedian}`} ms</td>
               </tr>
             );
           })}
@@ -97,21 +97,21 @@ const Grid = ({ data }) => {
             <>
               <tr>
                 <td>Summary Average</td>
-                <td colSpan="2" className={getColorClass(averageOfAverages)}>{averageOfAverages} ms</td>
                 {data.map((result, index) => {
                   const times = result.responses.filter(response => !response.error).map(response => response.time);
                   const average = calculateAverage(times);
                   return <td key={index} className={getColorClass(average)}>{average} ms</td>;
                 })}
+                <td colSpan="2" className={getColorClass(averageOfAverages)}>{averageOfAverages} ms</td>
               </tr>
               <tr>
                 <td>Summary Median</td>
-                <td colSpan="2" className={getColorClass(medianOfMedians)}>{medianOfMedians} ms</td>
                 {data.map((result, index) => {
                   const times = result.responses.filter(response => !response.error).map(response => response.time);
                   const median = calculateMedian(times);
                   return <td key={index} className={getColorClass(median)}>{median} ms</td>;
                 })}
+                <td colSpan="2" className={getColorClass(medianOfMedians)}>{medianOfMedians} ms</td>
               </tr>
             </>
           )}
