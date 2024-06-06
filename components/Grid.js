@@ -6,6 +6,8 @@ const Grid = ({ data }) => {
       return 'has-background-danger has-text-light';
     } else if (time > 200) {
       return 'has-background-warning has-text-dark';
+    } else if (time <= 200) {
+      return 'has-background-success has-text-light';
     } else {
       return '';
     }
@@ -31,31 +33,13 @@ const Grid = ({ data }) => {
       .map(response => response.time);
   };
 
-  const getAllTimes = () => {
-    return data
-      .flatMap(result => result.responses)
-      .filter(response => !response.error)
-      .map(response => response.time);
-  };
-
-  const averageOfAverages = calculateAverage(
-    data
-      .map(result => result.responses)
-      .flat()
-      .filter(response => !response.error)
-      .map(response => response.time)
-  );
-
-  const medianOfMedians = calculateMedian(
-    data
-      .map(result => result.responses)
-      .flat()
-      .filter(response => !response.error)
-      .map(response => response.time)
-  );
-
   return (
     <div className={styles.tableContainer}>
+      <div className={styles.legend}>
+        <span className="tag is-success">≤ 200 ms</span>
+        <span className="tag is-warning">201 - 500 ms</span>
+        <span className="tag is-danger"> &gt; 500 ms</span>
+      </div>
       <table className={`table is-fullwidth is-striped is-hoverable ${styles.borderedTable}`}>
         <thead>
           <tr>
