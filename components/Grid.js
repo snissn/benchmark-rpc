@@ -68,7 +68,7 @@ const Grid = ({ data }) => {
           <tr>
             <th>Method</th>
             {data.map((result, index) => (
-              <th key={index}>{result.rpcUrl}</th>
+              <th className={`${styles.rpcUrl}`} key={index}>{result.rpcUrl}</th>
             ))}
             <th>Average</th>
             <th>Median</th>
