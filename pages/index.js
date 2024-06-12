@@ -1,7 +1,5 @@
 import BenchmarkSection from '../components/BenchmarkSection';
 import styles from '../styles/Home.module.css';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const filecoinRpcUrls = [
   "https://fil-mainnet-1.rpc.laconic.com/rpc/v1",
@@ -45,20 +43,6 @@ const methodParams = (latestBlockNumber, latestBlockHash, latestTransactionHash)
   'eth_getBalance': ["0x0000000000000000000000000000000000000000", "latest"],
   'eth_gasPrice': []
 });
-
-
-const exportToPDF = () => {
-  const input = document.getElementById('benchmark-table');
-  html2canvas(input).then(canvas => {
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('landscape', 'mm', 'a4');
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save('benchmark.pdf');
-  });
-};
 
 const fetchLatestBlockInfo = async (rpcUrl) => {
   const blockNumberResult = await benchmarkRpc(rpcUrl, 'eth_blockNumber', []);
@@ -166,22 +150,19 @@ const Home = () => {
         <p>
           Source code available on <a href="https://github.com/snissn/benchmark-rpc" target="_blank" rel="noopener noreferrer">GitHub</a>.
         </p>
-        <button onClick={exportToPDF} className="button is-primary">Export to PDF</button>
       </div>
-      <div id="benchmark-table">
-	      <BenchmarkSection
-		title="Filecoin ETH RPC Benchmark"
-		rpcUrls={filecoinRpcUrls}
-		rpcMethods={rpcMethods}
-		fetchBenchmarkData={fetchBenchmarkData}
-	      />
-	      <BenchmarkSection
-		title="Ethereum RPC Benchmark"
-		rpcUrls={ethereumRpcUrls}
-		rpcMethods={rpcMethods}
-		fetchBenchmarkData={fetchBenchmarkData}
-	      />
-    </div>
+      <BenchmarkSection
+        title="Filecoin ETH RPC Benchmark"
+        rpcUrls={filecoinRpcUrls}
+        rpcMethods={rpcMethods}
+        fetchBenchmarkData={fetchBenchmarkData}
+      />
+      <BenchmarkSection
+        title="Ethereum RPC Benchmark"
+        rpcUrls={ethereumRpcUrls}
+        rpcMethods={rpcMethods}
+        fetchBenchmarkData={fetchBenchmarkData}
+      />
     </div>
   );
 };

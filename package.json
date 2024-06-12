@@ -9,8 +9,6 @@
   },
   "dependencies": {
     "bulma": "^1.0.1",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
