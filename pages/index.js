@@ -40,7 +40,7 @@ const methodParams = (latestBlockNumber, latestBlockHash, latestTransactionHash)
   'eth_getBlockTransactionCountByHash': [latestBlockHash],
   'eth_getTransactionByHash': [latestTransactionHash],
   'eth_getTransactionReceipt': [latestTransactionHash],
-  'eth_call': [{ to: "0x0000000000000000000000000000000000000000" }, "latest"],
+  'eth_call': [{ to: "0x7B90337f65fAA2B2B8ed583ba1Ba6EB0C9D7eA44", "data": "0x70a082310000000000000000000000007B90337f65fAA2B2B8ed583ba1Ba6EB0C9D7eA44" }, "latest"],
   'eth_getLogs': [{ fromBlock: "latest", address: "0x0000000000000000000000000000000000000000" }],
   'eth_getBalance': ["0x0000000000000000000000000000000000000000", "latest"],
   'eth_gasPrice': []
