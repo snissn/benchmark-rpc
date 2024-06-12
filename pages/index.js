@@ -5,7 +5,6 @@ import html2canvas from 'html2canvas';
 
 const filecoinRpcUrls = [
   "https://fil-mainnet-1.rpc.laconic.com/rpc/v1",
-  "https://rpc.ankr.com/filecoin",
   "https://filecoin.chainup.net/rpc/v1",
   "https://api.node.glif.io",
   "https://filfox.info/rpc/v1",
@@ -17,7 +16,6 @@ const ethereumRpcUrls = [
   "https://public.stackup.sh/api/v1/node/ethereum-mainnet",
   "https://ethereum.blockpi.network/v1/rpc/public",
   "https://eth-pokt.nodies.app",
-  "https://eth-mainnet.public.blastapi.io",
 ];
 
 const rpcMethods = [
