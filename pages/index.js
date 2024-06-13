@@ -2,6 +2,7 @@ import BenchmarkSection from '../components/BenchmarkSection';
 import styles from '../styles/Home.module.css';
 
 const filecoinRpcUrls = [
+  "https://rpc.ankr.com/filecoin",
   "https://fil-mainnet-1.rpc.laconic.com/rpc/v1",
   "https://filecoin.chainup.net/rpc/v1",
   "https://api.node.glif.io",
@@ -10,7 +11,8 @@ const filecoinRpcUrls = [
 ];
 
 const ethereumRpcUrls = [
-  "https://eth.llamarpc.com",
+  "https://rpc.ankr.com/eth",
+  "https://1rpc.io/eth",
   "https://public.stackup.sh/api/v1/node/ethereum-mainnet",
   "https://ethereum.blockpi.network/v1/rpc/public",
   "https://eth-pokt.nodies.app",
