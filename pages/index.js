@@ -3,7 +3,6 @@ import styles from '../styles/Home.module.css';
 
 const filecoinRpcUrls = [
   "https://rpc.ankr.com/filecoin",
-  "https://fil-mainnet-1.rpc.laconic.com/rpc/v1",
   "https://filecoin.chainup.net/rpc/v1",
   "https://api.node.glif.io",
   "https://filfox.info/rpc/v1",
